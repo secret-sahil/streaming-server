@@ -61,6 +61,7 @@ ARG MAKEFLAGS="-j4"
 # FFmpeg build dependencies.
 RUN apk add --update \
   build-base \
+  git \
   coreutils \
   freetype-dev \
   lame-dev \
