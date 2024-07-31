@@ -97,6 +97,7 @@ RUN cd /tmp/ffmpeg-${FFMPEG_VERSION} && \
   --enable-nonfree \
   --enable-version3 \
   --enable-gpl \
+  --enable-nonfree \
   --enable-small \
   --enable-libmp3lame \
   --enable-libx264 \
@@ -105,6 +106,7 @@ RUN cd /tmp/ffmpeg-${FFMPEG_VERSION} && \
   --enable-libtheora \
   --enable-libvorbis \
   --enable-libopus \
+  --enable-libfdk-aac \
   --enable-libass \
   --enable-libwebp \
   --enable-librtmp \
@@ -115,12 +117,8 @@ RUN cd /tmp/ffmpeg-${FFMPEG_VERSION} && \
   --disable-debug \
   --disable-doc \
   --disable-ffplay \
-  --extra-libs="-lpthread -lm" \
-  --extra-cflags="-I/usr/local/include" \
-  --extra-ldflags="-L/usr/local/lib" && \
-  make && \
-  make install && \
-  make distclean
+  --extra-libs="-lpthread -lm" && \
+  make && make install && make distclean
 
 # Cleanup.
 RUN rm -rf /var/cache/* /tmp/*
