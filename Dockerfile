@@ -123,7 +123,7 @@ RUN rm -rf /var/cache/* /tmp/*
 
 # Build the release image.
 FROM alpine:${ALPINE_VERSION}
-LABEL MAINTAINER Fábio Assunção <fabio@codions.com>
+LABEL MAINTAINER Sahil Kumar <sahil@hopingminds.com>
 
 ENV FILESYSTEM 'local'
 ENV STORAGE_PATH '/opt/data'
