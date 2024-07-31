@@ -25,14 +25,19 @@ RUN apk add --update \
   pcre \
   pcre-dev \
   pkgconf \
+  pkgconfig \
   zlib-dev
 
-# Get nginx source and nginx-rtmp module.
+# Get nginx source.
 RUN cd /tmp && \
   wget https://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
   tar zxf nginx-${NGINX_VERSION}.tar.gz && \
+  rm nginx-${NGINX_VERSION}.tar.gz
+
+# Get nginx-rtmp module.
+RUN cd /tmp && \
   wget https://github.com/arut/nginx-rtmp-module/archive/v${NGINX_RTMP_VERSION}.tar.gz && \
-  tar zxf v${NGINX_RTMP_VERSION}.tar.gz
+  tar zxf v${NGINX_RTMP_VERSION}.tar.gz && rm v${NGINX_RTMP_VERSION}.tar.gz
 
 # Compile nginx with nginx-rtmp module.
 RUN cd /tmp/nginx-${NGINX_VERSION} && \
@@ -45,7 +50,7 @@ RUN cd /tmp/nginx-${NGINX_VERSION} && \
   --with-http_ssl_module \
   --with-debug \
   --with-cc-opt="-Wimplicit-fallthrough=0" && \
-  make && make install
+  cd /tmp/nginx-${NGINX_VERSION} && make && make install
 
 # Build the FFmpeg-build image.
 FROM alpine:${ALPINE_VERSION} as build-ffmpeg
@@ -69,21 +74,23 @@ RUN apk add --update \
   openssl-dev \
   opus-dev \
   pkgconf \
+  pkgconfig \
   rtmpdump-dev \
   wget \
   x264-dev \
   x265-dev \
   yasm
 
-# Add repository and install fdk-aac
 RUN echo http://dl-cdn.alpinelinux.org/alpine/edge/community >> /etc/apk/repositories
 RUN apk add --update fdk-aac-dev
 
-# Get FFmpeg source and compile.
+# Get FFmpeg source.
 RUN cd /tmp/ && \
   wget http://ffmpeg.org/releases/ffmpeg-${FFMPEG_VERSION}.tar.gz && \
-  tar zxf ffmpeg-${FFMPEG_VERSION}.tar.gz && \
-  cd ffmpeg-${FFMPEG_VERSION} && \
+  tar zxf ffmpeg-${FFMPEG_VERSION}.tar.gz && rm ffmpeg-${FFMPEG_VERSION}.tar.gz
+
+# Compile ffmpeg.
+RUN cd /tmp/ffmpeg-${FFMPEG_VERSION} && \
   ./configure \
   --prefix=${PREFIX} \
   --enable-version3 \
@@ -107,7 +114,8 @@ RUN cd /tmp/ && \
   --enable-openssl \
   --disable-debug \
   --disable-doc \
-  --disable-ffplay && \
+  --disable-ffplay \
+  --extra-libs="-lpthread -lm" && \
   make && make install && make distclean
 
 # Cleanup.
@@ -123,7 +131,6 @@ ENV HTTP_PORT 80
 ENV HTTPS_PORT 443
 ENV RTMP_PORT 1935
 
-# Install runtime dependencies.
 RUN apk add --update \
   bash \
   ca-certificates \
@@ -132,6 +139,7 @@ RUN apk add --update \
   pcre \
   lame \
   libogg \
+  curl \
   libass \
   libvpx \
   libvorbis \
@@ -139,21 +147,23 @@ RUN apk add --update \
   libtheora \
   opus \
   rtmpdump \
-  s3fs-fuse
+  x264-dev \
+  x265-dev
 
-# Copy compiled binaries and libraries.
 COPY --from=build-nginx /usr/local/nginx /usr/local/nginx
 COPY --from=build-nginx /etc/nginx /etc/nginx
 COPY --from=build-ffmpeg /usr/local /usr/local
 COPY --from=build-ffmpeg /usr/lib/libfdk-aac.so.2 /usr/lib/libfdk-aac.so.2
 
-# Configure NGINX and add static files.
 ENV PATH "${PATH}:/usr/local/nginx/sbin"
 ADD nginx.conf /etc/nginx/nginx.conf.template
 RUN mkdir -p /opt/data && mkdir /www
 ADD static /www/static
 
-# Add entrypoint script.
+# Add S3FS
+RUN echo http://dl-cdn.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories
+RUN apk --update add s3fs-fuse
+
 ADD entrypoint.sh /
 RUN chmod +x /entrypoint.sh
 
