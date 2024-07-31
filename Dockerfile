@@ -112,6 +112,8 @@ RUN cd /tmp/ffmpeg-${FFMPEG_VERSION} && \
   --enable-avresample \
   --enable-libfreetype \
   --enable-openssl \
+  --enable-libfdk_aac \
+  --enable-nonfree \
   --disable-debug \
   --disable-doc \
   --disable-ffplay \
