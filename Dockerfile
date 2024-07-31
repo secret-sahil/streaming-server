@@ -93,6 +93,8 @@ RUN cd /tmp/ && \
 RUN cd /tmp/ffmpeg-${FFMPEG_VERSION} && \
   ./configure \
   --prefix=${PREFIX} \
+  --enable-libfdk_aac \
+  --enable-nonfree \
   --enable-version3 \
   --enable-gpl \
   --enable-nonfree \
