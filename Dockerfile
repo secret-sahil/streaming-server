@@ -166,7 +166,9 @@ RUN apk add --update \
   automake \
   autoconf \
   fuse-dev \
-  libxml2-dev
+  libxml2-dev \
+  libcurl \
+  libcrypto1.1
 
 COPY --from=build-nginx /usr/local/nginx /usr/local/nginx
 COPY --from=build-nginx /etc/nginx /etc/nginx
