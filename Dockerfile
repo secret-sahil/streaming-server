@@ -14,6 +14,7 @@ RUN apk add --update \
   build-base \
   ca-certificates \
   curl \
+  git \
   gcc \
   libc-dev \
   libgcc \
