@@ -109,7 +109,7 @@ RUN cd /tmp/ffmpeg-${FFMPEG_VERSION} && \
   --enable-libwebp \
   --enable-librtmp \
   --enable-postproc \
-  --enable-avresample \
+  # --enable-avresample \
   --enable-libfreetype \
   --enable-openssl \
   --disable-debug \
