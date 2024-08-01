@@ -157,7 +157,9 @@ RUN apk add --update \
   opus \
   rtmpdump \
   x264-dev \
-  x265-dev
+  x265-dev \
+  fuse \
+  s3fs-fuse
 
 COPY --from=build-nginx /usr/local/nginx /usr/local/nginx
 COPY --from=build-nginx /etc/nginx /etc/nginx
@@ -166,25 +168,6 @@ COPY --from=build-ffmpeg /usr/local /usr/local
 # Copy the shared library
 COPY --from=build-ffmpeg /usr/local/lib/libfdk-aac.so /usr/lib/libfdk-aac.so
 COPY --from=build-ffmpeg /usr/local/lib/libfdk-aac.so.2 /usr/lib/libfdk-aac.so.2
-
-# Add S3FS from source
-RUN apk add --update \
-  build-base \
-  git \
-  autoconf \
-  automake \
-  libtool \
-  fuse-dev \
-  curl-dev \
-  libxml2-dev
-
-RUN cd /tmp && \
-  git clone https://github.com/s3fs-fuse/s3fs-fuse.git && \
-  cd s3fs-fuse && \
-  ./autogen.sh && \
-  ./configure && \
-  make && \
-  make install
 
 ENV PATH "${PATH}:/usr/local/nginx/sbin"
 ADD nginx.conf /etc/nginx/nginx.conf.template
