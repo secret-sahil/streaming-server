@@ -97,6 +97,7 @@ RUN cd /tmp/ffmpeg-${FFMPEG_VERSION} && \
   --enable-nonfree \
   --enable-version3 \
   --enable-gpl \
+  --enable-nonfree \
   --enable-small \
   --enable-libmp3lame \
   --enable-libx264 \
@@ -105,6 +106,7 @@ RUN cd /tmp/ffmpeg-${FFMPEG_VERSION} && \
   --enable-libtheora \
   --enable-libvorbis \
   --enable-libopus \
+  --enable-libfdk-aac \
   --enable-libass \
   --enable-libwebp \
   --enable-librtmp \
