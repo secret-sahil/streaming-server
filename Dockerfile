@@ -173,7 +173,7 @@ RUN mkdir -p /opt/data && mkdir /www
 ADD static /www/static
 
 # Add S3FS
-RUN echo http://dl-cdn.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories
+RUN echo https://dl-cdn.alpinelinux.org/alpine/edge/community/x86/ >> /etc/apk/repositories
 RUN apk --update add s3fs-fuse
 
 ADD entrypoint.sh /
