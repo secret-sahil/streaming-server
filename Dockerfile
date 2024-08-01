@@ -60,33 +60,37 @@ ARG MAKEFLAGS="-j4"
 
 # FFmpeg build dependencies.
 RUN apk add --update \
+  build-base \
+  coreutils \
+  freetype-dev \
+  lame-dev \
+  libogg-dev \
+  libass \
+  libass-dev \
+  libvpx-dev \
+  libvorbis-dev \
+  libwebp-dev \
+  libtheora-dev \
+  openssl-dev \
+  opus-dev \
+  pkgconf \
+  pkgconfig \
+  rtmpdump-dev \
+  wget \
+  x264-dev \
+  x265-dev \
+  yasm \
   autoconf \
   automake \
-  build-essential \
-  cmake \
-  git-core \
-  libass-dev \
-  libfreetype6-dev \
-  libgnutls28-dev \
-  libmp3lame-dev \
-  libsdl2-dev \
-  libtool \
-  libva-dev \
-  libvdpau-dev \
-  libvorbis-dev \
-  libxcb1-dev \
-  libxcb-shm0-dev \
-  libxcb-xfixes0-dev \
-  meson \
-  ninja-build \
-  pkg-config \
-  texinfo \
-  wget \
-  yasm \
-  zlib1g-dev
+  libtool
 
-RUN echo http://dl-cdn.alpinelinux.org/alpine/edge/community >> /etc/apk/repositories
-RUN apk add --update fdk-aac-dev
+# Get and compile libfdk-aac
+RUN cd /tmp && \
+  git clone --depth 1 https://github.com/mstorsjo/fdk-aac && \
+  cd fdk-aac && \
+  autoreconf -fiv && \
+  ./configure --prefix=${PREFIX} --disable-shared && \
+  make && make install
 
 # Get FFmpeg source.
 RUN cd /tmp/ && \
