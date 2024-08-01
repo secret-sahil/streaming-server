@@ -167,14 +167,29 @@ COPY --from=build-ffmpeg /usr/local /usr/local
 COPY --from=build-ffmpeg /usr/local/lib/libfdk-aac.so /usr/lib/libfdk-aac.so
 COPY --from=build-ffmpeg /usr/local/lib/libfdk-aac.so.2 /usr/lib/libfdk-aac.so.2
 
+# Add S3FS from source
+RUN apk add --update \
+  build-base \
+  git \
+  autoconf \
+  automake \
+  libtool \
+  fuse-dev \
+  curl-dev \
+  libxml2-dev
+
+RUN cd /tmp && \
+  git clone https://github.com/s3fs-fuse/s3fs-fuse.git && \
+  cd s3fs-fuse && \
+  ./autogen.sh && \
+  ./configure && \
+  make && \
+  make install
+
 ENV PATH "${PATH}:/usr/local/nginx/sbin"
 ADD nginx.conf /etc/nginx/nginx.conf.template
 RUN mkdir -p /opt/data && mkdir /www
 ADD static /www/static
-
-# Add S3FS
-RUN echo https://dl-cdn.alpinelinux.org/alpine/edge/community/x86/ >> /etc/apk/repositories
-RUN apk --update add s3fs-fuse
 
 ADD entrypoint.sh /
 RUN chmod +x /entrypoint.sh
