@@ -60,26 +60,30 @@ ARG MAKEFLAGS="-j4"
 
 # FFmpeg build dependencies.
 RUN apk add --update \
-  build-base \
-  coreutils \
-  freetype-dev \
-  lame-dev \
-  libogg-dev \
-  libass \
+  autoconf \
+  automake \
+  build-essential \
+  cmake \
+  git-core \
   libass-dev \
-  libvpx-dev \
+  libfreetype6-dev \
+  libgnutls28-dev \
+  libmp3lame-dev \
+  libsdl2-dev \
+  libtool \
+  libva-dev \
+  libvdpau-dev \
   libvorbis-dev \
-  libwebp-dev \
-  libtheora-dev \
-  openssl-dev \
-  opus-dev \
-  pkgconf \
-  pkgconfig \
-  rtmpdump-dev \
+  libxcb1-dev \
+  libxcb-shm0-dev \
+  libxcb-xfixes0-dev \
+  meson \
+  ninja-build \
+  pkg-config \
+  texinfo \
   wget \
-  x264-dev \
-  x265-dev \
-  yasm
+  yasm \
+  zlib1g-dev
 
 RUN echo http://dl-cdn.alpinelinux.org/alpine/edge/community >> /etc/apk/repositories
 RUN apk add --update fdk-aac-dev
