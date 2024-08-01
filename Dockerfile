@@ -162,7 +162,11 @@ RUN apk add --update \
 COPY --from=build-nginx /usr/local/nginx /usr/local/nginx
 COPY --from=build-nginx /etc/nginx /etc/nginx
 COPY --from=build-ffmpeg /usr/local /usr/local
-COPY --from=build-ffmpeg /usr/local/libfdk-aac.so.2 /usr/lib/libfdk-aac.so.2
+
+# List contents of /usr/local/lib for debugging
+RUN ls -l /usr/local/lib > /tmp/lib_contents.txt
+
+COPY --from=build-ffmpeg /usr/local/lib/libfdk-aac.so.2 /usr/lib/libfdk-aac.so.2
 
 ENV PATH "${PATH}:/usr/local/nginx/sbin"
 ADD nginx.conf /etc/nginx/nginx.conf.template
