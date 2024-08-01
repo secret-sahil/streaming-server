@@ -105,6 +105,7 @@ RUN cd /tmp/ffmpeg-${FFMPEG_VERSION} && \
   --enable-libvorbis \
   --enable-libopus \
   --enable-libfdk-aac \
+  --enable-libfdk_aac \
   --enable-libass \
   --enable-libwebp \
   --enable-librtmp \
