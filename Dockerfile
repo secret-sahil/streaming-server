@@ -160,7 +160,13 @@ RUN apk add --update \
   opus \
   rtmpdump \
   x264-dev \
-  x265-dev
+  x265-dev \
+  build-base \
+  git \
+  automake \
+  autoconf \
+  fuse-dev \
+  libxml2-dev
 
 COPY --from=build-nginx /usr/local/nginx /usr/local/nginx
 COPY --from=build-nginx /etc/nginx /etc/nginx
@@ -170,14 +176,18 @@ COPY --from=build-ffmpeg /usr/local /usr/local
 COPY --from=build-ffmpeg /usr/local/lib/libfdk-aac.so /usr/lib/libfdk-aac.so
 COPY --from=build-ffmpeg /usr/local/lib/libfdk-aac.so.2 /usr/lib/libfdk-aac.so.2
 
+# Get and compile s3fs-fuse
+RUN cd /tmp && \
+  git clone https://github.com/s3fs-fuse/s3fs-fuse.git && \
+  cd s3fs-fuse && \
+  ./autogen.sh && \
+  ./configure && \
+  make && make install
+
 ENV PATH "${PATH}:/usr/local/nginx/sbin"
 ADD nginx.conf /etc/nginx/nginx.conf.template
 RUN mkdir -p /opt/data && mkdir /www
 ADD static /www/static
-
-# Add S3FS
-RUN echo http://dl-cdn.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories
-RUN apk --update add s3fs-fuse
 
 ADD entrypoint.sh /
 RUN chmod +x /entrypoint.sh
