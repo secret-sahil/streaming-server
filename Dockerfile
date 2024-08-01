@@ -165,7 +165,6 @@ RUN apk add --update \
 COPY --from=build-nginx /usr/local/nginx /usr/local/nginx
 COPY --from=build-nginx /etc/nginx /etc/nginx
 COPY --from=build-ffmpeg /usr/local /usr/local
-COPY --from=build-ffmpeg /tmp/lib_contents.txt /tmp/lib_contents.txt
 
 # Copy the shared library
 COPY --from=build-ffmpeg /usr/local/lib/libfdk-aac.so /usr/lib/libfdk-aac.so
