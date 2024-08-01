@@ -14,7 +14,6 @@ RUN apk add --update \
   build-base \
   ca-certificates \
   curl \
-  git \
   gcc \
   libc-dev \
   libgcc \
@@ -83,7 +82,8 @@ RUN apk add --update \
   yasm \
   autoconf \
   automake \
-  libtool
+  libtool \
+  git
 
 # Get and compile libfdk-aac
 RUN cd /tmp && \
