@@ -12,19 +12,6 @@ set -e
 : ${AWS_S3_URL:='https://s3.amazonaws.com'}
 : ${AWS_S3_REGION:='us-east-1'}
 : ${S3FS_ARGS:=''}
-echo "Working"
-echo "Working"
-echo "Working"
-echo "Working"
-echo "Working"
-echo "Working"
-echo "Working"
-echo "Working"
-echo "Working"
-echo "Working"
-echo "Working"
-echo "Working"
-echo "Working"
 # If no command specified, print error
 [ "$1" == "" ] && set -- "$@" bash -c 'echo "Error: Please specify a command to run."; exit 128'
 
