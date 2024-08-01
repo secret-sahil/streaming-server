@@ -127,7 +127,7 @@ RUN rm -rf /var/cache/* /tmp/*
 FROM alpine:${ALPINE_VERSION}
 LABEL MAINTAINER Sahil Kumar <sahil@hopingminds.com>
 
-ENV FILESYSTEM 'local'
+ENV FILESYSTEM 's3'
 ENV STORAGE_PATH '/opt/data'
 ENV HTTP_PORT 80
 ENV HTTPS_PORT 443
