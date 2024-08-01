@@ -5,7 +5,7 @@ ARG FFMPEG_VERSION=7.0.1
 ARG S3FS_VERSION=v1.85
 
 # Build the NGINX-build image.
-FROM alpine:${ALPINE_VERSION} as build-nginx
+FROM alpine:${ALPINE_VERSION} AS build-nginx
 ARG NGINX_VERSION
 ARG NGINX_RTMP_VERSION
 
@@ -53,7 +53,7 @@ RUN cd /tmp/nginx-${NGINX_VERSION} && \
   cd /tmp/nginx-${NGINX_VERSION} && make && make install
 
 # Build the FFmpeg-build image.
-FROM alpine:${ALPINE_VERSION} as build-ffmpeg
+FROM alpine:${ALPINE_VERSION} AS build-ffmpeg
 ARG FFMPEG_VERSION
 ARG PREFIX=/usr/local
 ARG MAKEFLAGS="-j4"
