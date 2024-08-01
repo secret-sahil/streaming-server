@@ -85,12 +85,12 @@ RUN apk add --update \
   libtool \
   git
 
-# Get and compile libfdk-aac
+# Get and compile libfdk-aac as shared library
 RUN cd /tmp && \
   git clone --depth 1 https://github.com/mstorsjo/fdk-aac && \
   cd fdk-aac && \
   autoreconf -fiv && \
-  ./configure --prefix=${PREFIX} --disable-shared && \
+  ./configure --prefix=${PREFIX} --enable-shared && \
   make && make install
 
 # Get FFmpeg source.
@@ -127,6 +127,9 @@ RUN cd /tmp/ffmpeg-${FFMPEG_VERSION} && \
   --extra-libs="-lpthread -lm" && \
   make && make install && make distclean
 
+# List contents of /usr/local/lib for debugging
+RUN ls -l /usr/local/lib > /tmp/lib_contents.txt
+
 # Cleanup.
 RUN rm -rf /var/cache/* /tmp/*
 
@@ -162,25 +165,26 @@ RUN apk add --update \
 COPY --from=build-nginx /usr/local/nginx /usr/local/nginx
 COPY --from=build-nginx /etc/nginx /etc/nginx
 COPY --from=build-ffmpeg /usr/local /usr/local
+COPY --from=build-ffmpeg /tmp/lib_contents.txt /tmp/lib_contents.txt
 
-# List contents of /usr/local/lib for debugging
-RUN ls -l /usr/local/share/ffmpeg > /tmp/lib_contents.txt
-# COPY --from=build-ffmpeg /usr/local/lib/libfdk-aac.so.2 /usr/lib/libfdk-aac.so.2
+# Copy the shared library
+COPY --from=build-ffmpeg /usr/local/lib/libfdk-aac.so /usr/lib/libfdk-aac.so
+COPY --from=build-ffmpeg /usr/local/lib/libfdk-aac.so.2 /usr/lib/libfdk-aac.so.2
 
-# ENV PATH "${PATH}:/usr/local/nginx/sbin"
-# ADD nginx.conf /etc/nginx/nginx.conf.template
-# RUN mkdir -p /opt/data && mkdir /www
-# ADD static /www/static
+ENV PATH "${PATH}:/usr/local/nginx/sbin"
+ADD nginx.conf /etc/nginx/nginx.conf.template
+RUN mkdir -p /opt/data && mkdir /www
+ADD static /www/static
 
-# # Add S3FS
-# RUN echo http://dl-cdn.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories
-# RUN apk --update add s3fs-fuse
+# Add S3FS
+RUN echo http://dl-cdn.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories
+RUN apk --update add s3fs-fuse
 
-# ADD entrypoint.sh /
-# RUN chmod +x /entrypoint.sh
+ADD entrypoint.sh /
+RUN chmod +x /entrypoint.sh
 
 EXPOSE 80
 EXPOSE 443
 EXPOSE 1935
 
-# CMD ["/entrypoint.sh"]
+CMD ["/entrypoint.sh"]
