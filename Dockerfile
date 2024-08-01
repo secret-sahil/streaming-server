@@ -165,23 +165,22 @@ COPY --from=build-ffmpeg /usr/local /usr/local
 
 # List contents of /usr/local/lib for debugging
 RUN ls -l /usr/local/lib > /tmp/lib_contents.txt
+# COPY --from=build-ffmpeg /usr/local/lib/libfdk-aac.so.2 /usr/lib/libfdk-aac.so.2
 
-COPY --from=build-ffmpeg /usr/local/lib/libfdk-aac.so.2 /usr/lib/libfdk-aac.so.2
+# ENV PATH "${PATH}:/usr/local/nginx/sbin"
+# ADD nginx.conf /etc/nginx/nginx.conf.template
+# RUN mkdir -p /opt/data && mkdir /www
+# ADD static /www/static
 
-ENV PATH "${PATH}:/usr/local/nginx/sbin"
-ADD nginx.conf /etc/nginx/nginx.conf.template
-RUN mkdir -p /opt/data && mkdir /www
-ADD static /www/static
+# # Add S3FS
+# RUN echo http://dl-cdn.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories
+# RUN apk --update add s3fs-fuse
 
-# Add S3FS
-RUN echo http://dl-cdn.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories
-RUN apk --update add s3fs-fuse
-
-ADD entrypoint.sh /
-RUN chmod +x /entrypoint.sh
+# ADD entrypoint.sh /
+# RUN chmod +x /entrypoint.sh
 
 EXPOSE 80
 EXPOSE 443
 EXPOSE 1935
 
-CMD ["/entrypoint.sh"]
+# CMD ["/entrypoint.sh"]
