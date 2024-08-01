@@ -65,7 +65,6 @@ RUN apk add --update \
   freetype-dev \
   lame-dev \
   libogg-dev \
-  libass \
   libass-dev \
   libvpx-dev \
   libvorbis-dev \
@@ -84,6 +83,10 @@ RUN apk add --update \
 RUN echo http://dl-cdn.alpinelinux.org/alpine/edge/community >> /etc/apk/repositories
 RUN apk add --update fdk-aac-dev
 
+# Verify the installation of libfdk-aac
+RUN ls -l /usr/lib | grep fdk-aac
+RUN ls -l /usr/include | grep fdk-aac
+
 # Get FFmpeg source.
 RUN cd /tmp/ && \
   wget http://ffmpeg.org/releases/ffmpeg-${FFMPEG_VERSION}.tar.gz && \
@@ -97,7 +100,6 @@ RUN cd /tmp/ffmpeg-${FFMPEG_VERSION} && \
   --enable-nonfree \
   --enable-version3 \
   --enable-gpl \
-  --enable-nonfree \
   --enable-small \
   --enable-libmp3lame \
   --enable-libx264 \
@@ -106,7 +108,6 @@ RUN cd /tmp/ffmpeg-${FFMPEG_VERSION} && \
   --enable-libtheora \
   --enable-libvorbis \
   --enable-libopus \
-  --enable-libfdk-aac \
   --enable-libass \
   --enable-libwebp \
   --enable-librtmp \
