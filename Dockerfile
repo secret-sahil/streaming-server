@@ -1,7 +1,7 @@
 ARG ALPINE_VERSION=3.14
 ARG NGINX_VERSION=1.21.0
 ARG NGINX_RTMP_VERSION=1.2.2
-ARG FFMPEG_VERSION=7.0.1
+ARG FFMPEG_VERSION=4.4
 ARG S3FS_VERSION=v1.85
 
 # Build the NGINX-build image.
@@ -105,12 +105,11 @@ RUN cd /tmp/ffmpeg-${FFMPEG_VERSION} && \
   --enable-libvorbis \
   --enable-libopus \
   --enable-libfdk-aac \
-  --enable-libfdk_aac \
   --enable-libass \
   --enable-libwebp \
   --enable-librtmp \
   --enable-postproc \
-  # --enable-avresample \
+  --enable-avresample \
   --enable-libfreetype \
   --enable-openssl \
   --disable-debug \
