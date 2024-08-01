@@ -164,7 +164,7 @@ COPY --from=build-nginx /etc/nginx /etc/nginx
 COPY --from=build-ffmpeg /usr/local /usr/local
 
 # List contents of /usr/local/lib for debugging
-RUN ls -l /usr/local/share > /tmp/lib_contents.txt
+RUN ls -l /usr/local/share/ffmpeg > /tmp/lib_contents.txt
 # COPY --from=build-ffmpeg /usr/local/lib/libfdk-aac.so.2 /usr/lib/libfdk-aac.so.2
 
 # ENV PATH "${PATH}:/usr/local/nginx/sbin"
